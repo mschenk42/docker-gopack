@@ -5,6 +5,8 @@ import (
 	"github.com/mschenk42/gopack/action"
 )
 
+var dockerTask Docker
+
 // Run initializes the properties and runs the pack
 func Run(props *gopack.Properties, actions []string) {
 	pack := gopack.Pack{
@@ -17,7 +19,12 @@ func Run(props *gopack.Properties, actions []string) {
 		ActionMap: map[string]func(p *gopack.Pack){
 			"default": run,
 			"install": install,
+			"start":   start,
 		},
+	}
+	dockerTask = Docker{
+		Version:  pack.Props.Str("docker.version"),
+		EdgeRepo: pack.Props.Bool("docker.enable-edge-repo"),
 	}
 	pack.Run(props)
 }
@@ -26,8 +33,9 @@ func run(pack *gopack.Pack) {
 }
 
 func install(pack *gopack.Pack) {
-	Docker{
-		Version:  pack.Props.Str("docker.version"),
-		EdgeRepo: pack.Props.Bool("docker.enable-edge-repo"),
-	}.Run(action.Install)
+	dockerTask.Run(action.Install)
+}
+
+func start(pack *gopack.Pack) {
+	dockerTask.Run(action.Enable, action.Start)
 }
