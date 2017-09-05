@@ -9,8 +9,8 @@ import (
 	"github.com/mschenk42/systemd-runpack/systemd"
 )
 
-// Docker installs and configures the Docker service for a host
-type Docker struct {
+// Service installs and configures the Service service for a host
+type Service struct {
 	Version  string
 	EdgeRepo bool
 
@@ -18,28 +18,28 @@ type Docker struct {
 }
 
 // Run initializes default property values and delegates to BaseTask RunActions method
-func (d Docker) Run(runActions ...action.Enum) gopack.ActionRunStatus {
-	d.setDefaults()
-	return d.RunActions(&d, d.registerActions(), runActions)
+func (s Service) Run(runActions ...action.Enum) gopack.ActionRunStatus {
+	s.setDefaults()
+	return s.RunActions(&s, s.registerActions(), runActions)
 }
 
-func (d Docker) registerActions() action.Methods {
+func (s Service) registerActions() action.Methods {
 	return action.Methods{
-		action.Install: d.install,
-		action.Enable:  d.enable,
-		action.Start:   d.start,
+		action.Install: s.install,
+		action.Enable:  s.enable,
+		action.Start:   s.start,
 	}
 }
 
-func (d *Docker) setDefaults() {
+func (s *Service) setDefaults() {
 }
 
 // String returns a string which identifies the task with it's property values
-func (d Docker) String() string {
-	return fmt.Sprintf("docker %s edge %t", d.Version, d.EdgeRepo)
+func (s Service) String() string {
+	return fmt.Sprintf("docker %s edge %t", s.Version, s.EdgeRepo)
 }
 
-func (d Docker) install() (bool, error) {
+func (s Service) install() (bool, error) {
 	const dockerBreadcrumb = "/var/run/docker-installed"
 
 	_, breadcrumb, err := task.Fexists(dockerBreadcrumb)
@@ -71,7 +71,7 @@ func (d Docker) install() (bool, error) {
 			Args:   []string{"--enable", "docker-ce-edge"},
 			Stream: true,
 		}
-		enableEdgeRepo.SetOnlyIf(func() (bool, error) { return d.EdgeRepo, nil })
+		enableEdgeRepo.SetOnlyIf(func() (bool, error) { return s.EdgeRepo, nil })
 		enableEdgeRepo.Run(action.Run)
 
 		task.Command{
@@ -82,7 +82,7 @@ func (d Docker) install() (bool, error) {
 
 		task.Command{
 			Name:   "yum",
-			Args:   []string{"install", "-y", d.Version},
+			Args:   []string{"install", "-y", s.Version},
 			Stream: true,
 		}.Run(action.Run)
 
@@ -96,12 +96,12 @@ func (d Docker) install() (bool, error) {
 	return false, nil
 }
 
-func (d Docker) start() (bool, error) {
+func (s Service) start() (bool, error) {
 	status := systemd.SystemCtl{Service: "docker"}.Run(action.Start)
 	return status[action.Start], nil
 }
 
-func (d Docker) enable() (bool, error) {
+func (s Service) enable() (bool, error) {
 	status := systemd.SystemCtl{Service: "docker"}.Run(action.Enable)
 	return status[action.Enable], nil
 }
