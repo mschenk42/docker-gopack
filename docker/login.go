@@ -12,7 +12,7 @@ import (
 type Login struct {
 	User     string
 	Password string
-	Domain   string
+	Host     string
 
 	gopack.BaseTask
 }
@@ -34,13 +34,13 @@ func (l *Login) setDefaults() {
 
 // String returns a string which identifies the task with it's property values
 func (l Login) String() string {
-	return fmt.Sprintf("login %s %s", l.User, l.Domain)
+	return fmt.Sprintf("login %s %s", l.User, l.Host)
 }
 
 func (l Login) run() (bool, error) {
 	t := task.Command{
 		Name:   "docker",
-		Args:   []string{"login", "-u", l.User, "-p", l.Password, l.Domain},
+		Args:   []string{"login", "-u", l.User, "-p", l.Password, l.Host},
 		Stream: true,
 	}
 	return t.Run(action.Run)[action.Run], nil
