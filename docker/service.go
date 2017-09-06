@@ -6,7 +6,7 @@ import (
 	"github.com/mschenk42/gopack"
 	"github.com/mschenk42/gopack/action"
 	"github.com/mschenk42/gopack/task"
-	"github.com/mschenk42/systemd-runpack/systemd"
+	"github.com/mschenk42/systemd-gopack/systemd"
 )
 
 // Service installs and configures the Service service for a host
