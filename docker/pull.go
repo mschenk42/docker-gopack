@@ -18,13 +18,13 @@ type Pull struct {
 }
 
 // Run initializes default property values and delegates to BaseTask RunActions method
-func (p Pull) Run(runActions ...action.Enum) gopack.ActionRunStatus {
+func (p Pull) Run(runActions ...action.Name) gopack.ActionRunStatus {
 	p.setDefaults()
 	return p.RunActions(&p, p.registerActions(), runActions)
 }
 
-func (p Pull) registerActions() action.Methods {
-	return action.Methods{
+func (p Pull) registerActions() action.Funcs {
+	return action.Funcs{
 		action.Run: p.run,
 	}
 }

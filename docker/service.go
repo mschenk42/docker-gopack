@@ -17,13 +17,13 @@ type Service struct {
 }
 
 // Run initializes default property values and delegates to BaseTask RunActions method
-func (s Service) Run(runActions ...action.Enum) gopack.ActionRunStatus {
+func (s Service) Run(runActions ...action.Name) gopack.ActionRunStatus {
 	s.setDefaults()
 	return s.RunActions(&s, s.registerActions(), runActions)
 }
 
-func (s Service) registerActions() action.Methods {
-	return action.Methods{
+func (s Service) registerActions() action.Funcs {
+	return action.Funcs{
 		action.Install: s.install,
 		action.Enable:  s.enable,
 		action.Start:   s.start,

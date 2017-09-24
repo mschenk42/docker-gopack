@@ -18,13 +18,13 @@ type Login struct {
 }
 
 // Run initializes default property values and delegates to BaseTask RunActions method
-func (l Login) Run(runActions ...action.Enum) gopack.ActionRunStatus {
+func (l Login) Run(runActions ...action.Name) gopack.ActionRunStatus {
 	l.setDefaults()
 	return l.RunActions(&l, l.registerActions(), runActions)
 }
 
-func (l Login) registerActions() action.Methods {
-	return action.Methods{
+func (l Login) registerActions() action.Funcs {
+	return action.Funcs{
 		action.Run: l.run,
 	}
 }
