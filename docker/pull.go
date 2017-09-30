@@ -38,9 +38,16 @@ func (p Pull) String() string {
 }
 
 func (p Pull) run() (bool, error) {
+	args := []string{"pull"}
+	switch p.Host {
+	case "":
+		args = append(args, fmt.Sprintf("%s:%s", p.Repo, p.Tag))
+	default:
+		args = append(args, fmt.Sprintf("%s/%s:%s", p.Host, p.Repo, p.Tag))
+	}
 	t := task.Command{
 		Name:   "docker",
-		Args:   []string{"pull", fmt.Sprintf("%s/%s:%s", p.Host, p.Repo, p.Tag)},
+		Args:   args,
 		Stream: true,
 	}
 	return t.Run(action.Run)[action.Run], nil
