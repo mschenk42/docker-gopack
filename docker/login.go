@@ -39,9 +39,10 @@ func (l Login) String() string {
 
 func (l Login) run() (bool, error) {
 	t := task.Command{
-		Name:   "docker",
-		Args:   []string{"login", "-u", l.User, "-p", l.Password, l.Host},
-		Stream: true,
+		Name:      "docker",
+		Args:      []string{"login", "-u", l.User, "-p", l.Password, l.Host},
+		Stream:    true,
+		Sensitive: true,
 	}
 	return t.Run(action.Run)[action.Run], nil
 }
