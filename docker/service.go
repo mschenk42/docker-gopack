@@ -8,7 +8,7 @@ import (
 	"github.com/mschenk42/systemd-gopack/systemd"
 )
 
-// Service installs and configures the Service service for a host
+// Service installs and configures the docker service for a host
 type Service struct {
 	Version  string
 	EdgeRepo bool
